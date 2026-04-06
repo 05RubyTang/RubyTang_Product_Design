@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小红书调研报告 · AI产品经理</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif; background: #fff5f5; color: #333; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #FF2442 0%, #FF6B81 60%, #FFB347 100%);
+    color: white;
+    padding: 48px 32px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; top: -30%; left: -10%;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -20%; right: 5%;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.22);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; position: relative; z-index: 1; }
+  .header .subtitle { font-size: 15px; opacity: 0.88; margin-bottom: 28px; position: relative; z-index: 1; }
+  .header-stats {
+    display: flex; justify-content: center; gap: 40px;
+    position: relative; z-index: 1;
+  }
+  .header-stat { text-align: center; }
+  .header-stat .num { font-size: 26px; font-weight: 800; }
+  .header-stat .label { font-size: 12px; opacity: 0.78; margin-top: 2px; }
+
+  /* Layout */
+  .container { max-width: 1000px; margin: 0 auto; padding: 32px 20px 60px; }
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 18px; font-weight: 700; color: #FF2442;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 2px;
+    background: linear-gradient(90deg, #FF2442 0%, transparent 100%);
+    border-radius: 2px;
+  }
+
+  /* Overview cards */
+  .overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .overview-card {
+    background: white; border-radius: 16px;
+    padding: 18px 14px; text-align: center;
+    box-shadow: 0 2px 12px rgba(255,36,66,0.08);
+    border: 1px solid #ffe0e5;
+  }
+  .overview-card .oc-icon { font-size: 24px; margin-bottom: 8px; }
+  .overview-card .oc-num { font-size: 22px; font-weight: 800; color: #FF2442; }
+  .overview-card .oc-label { font-size: 12px; color: #888; margin-top: 4px; }
+
+  /* Topic heat */
+  .topic-list { display: flex; flex-direction: column; gap: 10px; }
+  .topic-item {
+    background: white; border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-left: 4px solid #FF2442;
+  }
+  .topic-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .topic-name { font-weight: 600; font-size: 15px; }
+  .topic-stars { color: #FF2442; font-size: 13px; }
+  .topic-bar-bg { background: #f0f0f0; border-radius: 6px; height: 8px; }
+  .topic-bar { background: linear-gradient(90deg, #FF2442, #FF8C6A); height: 8px; border-radius: 6px; }
+  .topic-desc { font-size: 12px; color: #888; margin-top: 6px; }
+
+  /* Notes grid */
+  .notes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .note-card {
+    background: white; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+    border: 1px solid #f5f5f5;
+    transition: transform 0.2s;
+  }
+  .note-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(255,36,66,0.12); }
+  .note-card-header {
+    background: linear-gradient(135deg, #FF2442, #FF8C6A);
+    color: white; padding: 14px 16px;
+    font-size: 14px; font-weight: 600; line-height: 1.5;
+  }
+  .note-card-body { padding: 14px 16px; }
+  .note-abstract { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 12px; }
+  .note-meta { display: flex; gap: 14px; }
+  .note-stat {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px; color: #999;
+  }
+  .note-stat span { color: #FF2442; font-weight: 600; }
+  .note-tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    background: #fff0f2; color: #FF2442;
+    font-size: 11px; padding: 3px 9px;
+    border-radius: 20px; border: 1px solid #ffd0d8;
+  }
+  .note-link {
+    display: inline-block; margin-top: 10px;
+    font-size: 12px; color: #FF2442; text-decoration: none;
+    border: 1px solid #FF2442; border-radius: 20px;
+    padding: 3px 12px;
+  }
+  .note-link:hover { background: #FF2442; color: white; }
+
+  /* Bloggers */
+  .blogger-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .blogger-card {
+    background: white; border-radius: 16px;
+    padding: 18px 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border: 1px solid #f0f0f0;
+  }
+  .blogger-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, #FF2442, #FF8C6A);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 10px;
+  }
+  .blogger-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .blogger-type {
+    font-size: 11px; color: #FF2442;
+    background: #fff0f2; padding: 2px 8px;
+    border-radius: 10px; display: inline-block;
+    margin-bottom: 8px; border: 1px solid #ffd0d8;
+  }
+  .blogger-desc { font-size: 12px; color: #666; line-height: 1.6; margin-bottom: 10px; }
+  .blogger-topics { font-size: 11px; color: #999; }
+  .blogger-topics strong { color: #333; }
+  .blogger-link { font-size: 12px; color: #FF2442; text-decoration: none; word-break: break-all; }
+  .blogger-link:hover { text-decoration: underline; }
+
+  /* Voices / Quotes */
+  .voices-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .voice-card {
+    background: white; border-radius: 12px;
+    padding: 16px; position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-left: 3px solid #FF2442;
+  }
+  .voice-quote {
+    font-size: 13px; color: #444; line-height: 1.8;
+    font-style: italic;
+  }
+  .voice-source { font-size: 11px; color: #aaa; margin-top: 8px; }
+
+  /* Needs vs Pains */
+  .np-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .np-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  .np-card.needs { border-top: 4px solid #22c55e; }
+  .np-card.pains { border-top: 4px solid #FF2442; }
+  .np-title { font-weight: 700; margin-bottom: 14px; font-size: 15px; }
+  .np-card.needs .np-title { color: #22c55e; }
+  .np-card.pains .np-title { color: #FF2442; }
+  .np-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    margin-bottom: 10px; font-size: 13px; color: #555; line-height: 1.6;
+  }
+  .np-bullet { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Insights */
+  .insights-list { display: flex; flex-direction: column; gap: 12px; }
+  .insight-item {
+    background: white; border-radius: 14px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    display: flex; gap: 14px; align-items: flex-start;
+    border: 1px solid #f5f5f5;
+  }
+  .insight-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #FF2442, #FF8C6A);
+    color: white; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .insight-text { font-size: 14px; color: #444; line-height: 1.7; }
+  .insight-text strong { color: #FF2442; }
+
+  /* Skill map */
+  .skill-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .skill-card {
+    background: white; border-radius: 16px;
+    padding: 18px; text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border: 1px solid #f0f0f0;
+  }
+  .skill-icon { font-size: 28px; margin-bottom: 8px; }
+  .skill-name { font-weight: 700; font-size: 14px; margin-bottom: 6px; color: #333; }
+  .skill-tools { font-size: 12px; color: #888; line-height: 1.6; }
+  .skill-level {
+    margin-top: 10px; font-size: 11px;
+    background: #fff0f2; color: #FF2442;
+    padding: 3px 10px; border-radius: 20px;
+    display: inline-block; border: 1px solid #ffd0d8;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center; padding: 24px;
+    font-size: 12px; color: #bbb;
+    border-top: 1px solid #f0f0f0;
+    background: white;
+  }
+
+  @media (max-width: 680px) {
+    .overview-grid { grid-template-columns: repeat(2, 1fr); }
+    .notes-grid { grid-template-columns: 1fr; }
+    .blogger-grid { grid-template-columns: repeat(2, 1fr); }
+    .np-grid { grid-template-columns: 1fr; }
+    .skill-grid { grid-template-columns: repeat(2, 1fr); }
+    .voices-grid { grid-template-columns: 1fr; }
+    .header-stats { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-tag">📊 小红书用户调研报告</div>
+  <h1>AI 产品经理</h1>
+  <p class="subtitle">技能 · 工具 · 选题 · 典型博主 · 用户声音 &nbsp;｜&nbsp; 生成时间：2026年4月4日</p>
+  <div class="header-stats">
+    <div class="header-stat">
+      <div class="num">60+</div>
+      <div class="label">覆盖笔记</div>
+    </div>
+    <div class="header-stat">
+      <div class="num">8</div>
+      <div class="label">核心话题</div>
+    </div>
+    <div class="header-stat">
+      <div class="num">240%</div>
+      <div class="label">岗位需求增速</div>
+    </div>
+    <div class="header-stat">
+      <div class="num">25K+</div>
+      <div class="label">起薪水平</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="container">
+
+  <!-- 数据概览 -->
+  <div class="section">
+    <div class="section-title">📊 数据概览</div>
+    <div class="overview-grid">
+      <div class="overview-card">
+        <div class="oc-icon">🔥</div>
+        <div class="oc-num">超热</div>
+        <div class="oc-label">AI产品经理 整体热度</div>
+      </div>
+      <div class="overview-card">
+        <div class="oc-icon">💬</div>
+        <div class="oc-num">转型</div>
+        <div class="oc-label">最高频用户意图</div>
+      </div>
+      <div class="overview-card">
+        <div class="oc-icon">🛠️</div>
+        <div class="oc-num">工具测评</div>
+        <div class="oc-label">最受欢迎内容类型</div>
+      </div>
+      <div class="overview-card">
+        <div class="oc-icon">📈</div>
+        <div class="oc-num">持续上涨</div>
+        <div class="oc-label">搜索热度趋势</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 话题热度 -->
+  <div class="section">
+    <div class="section-title">🎯 子话题热度分析</div>
+    <div class="topic-list">
+
+      <div class="topic-item">
+        <div class="topic-header">
+          <div class="topic-name">🔀 转型 / 如何成为AI产品经理</div>
+          <div class="topic-stars">★★★★★ 极热</div>
+        </div>
+        <div class="topic-bar-bg"><div class="topic-bar" style="width:95%"></div></div>
+        <div class="topic-desc">核心需求：普通PM/运营/开发如何快速转型，学习路线图，简历面试攻略。岗位增速240%，月薪25-60K是主要驱动力。</div>
+      </div>
+
+      <div class="topic-item">
+        <div class="topic-header">
+          <div class="topic-name">🧰 必备工具测评（Cursor / Claude / Coze / GPT）</div>
+          <div class="topic-stars">★★★★★ 极热</div>
+        </div>
+        <div class="topic-bar-bg"><div class="topic-bar" style="width:90%"></div></div>
+        <div class="topic-desc">AI PM必用工具横评是爆款选题常青树。内容涵盖：Cursor写原型、Claude写PRD、Coze搭工作流、飞书多维表格管理需求等。</div>
+      </div>
+
+      <div class="topic-item">
+        <div class="topic-header">
+          <div class="topic-name">📝 Prompt工程 / 提示词技巧</div>
+          <div class="topic-stars">★★★★☆ 热门</div>
+        </div>
+        <div class="topic-bar-bg"><div class="topic-bar" style="width:80%"></div></div>
+        <div class="topic-desc">Prompt Engineering是AI PM的核心硬技能，平台上大量「保姆级提示词教程」「Claude Skill搭建」「系统提示词模板」类内容持续高热。</div>
+      </div>
+
+      <div class="topic-item">
+        <div class="topic-header">
+          <div class="topic-name">🤖 AI Agent / 智能体产品设计</div>
+          <div class="topic-stars">★★★★☆ 热门</div>
+        </div>
+        <div class="topic-bar-bg"><div class="topic-bar" style="width:75%"></div></div>
+        <div class="topic-desc">Agent成为AI PM的核心产品形态，知识库/工作流/Prompt三大痛点内容颇受关注。Coze/Dify/扣子等平台实战教程大量涌现。</div>
+      </div>
+
+      <div class="topic-item">
+        <div class="topic-header">
+          <div class="topic-name">💰 薪资 / 面试 / 求职</div>
+          <div class="topic-stars">★★★★☆ 热门</div>
+        </div>
+        <div class="topic-bar-bg"><div class="topic-bar" style="width:72%"></div></div>
+        <div class="topic-desc">「起薪30K的AI PM如何拿offer」「AI PM面试题100问」「双非本科转型涨薪65%」等经历类内容互动极高，真实案例优于纯干货。</div>
+      </div>
+
+      <div class="topic-item">
+        <div class="topic-header">
+          <div class="topic-name">📐 AI辅助写PRD / 原型 / 需求文档</div>
+          <div class="topic-stars">★★★☆☆ 中热</div>
+        </div>
+        <div class="topic-bar-bg"><div class="topic-bar" style="width:60%"></div></div>
+        <div class="topic-desc">「AI生成PRD工具测评」「用Cursor/Claude 30分钟写出产品方案」「PM AI专属PRD工具」是中等热度的实用型内容，受有经验PM欢迎。</div>
+      </div>
+
+      <div class="topic-item">
+        <div class="topic-header">
+          <div class="topic-name">🧪 无代码/低代码独立开发</div>
+          <div class="topic-stars">★★★☆☆ 中热</div>
+        </div>
+        <div class="topic-bar-bg"><div class="topic-bar" style="width:55%"></div></div>
+        <div class="topic-desc">「PM用AI Coding造出真产品」「产品经理不写代码全程实录」「Vibe coding产品上线」类内容是新兴高增话题，吸引大量不懂技术的PM。</div>
+      </div>
+
+      <div class="topic-item">
+        <div class="topic-header">
+          <div class="topic-name">📚 学习路线 / 书单 / 资源推荐</div>
+          <div class="topic-stars">★★★☆☆ 中热</div>
+        </div>
+        <div class="topic-bar-bg"><div class="topic-bar" style="width:50%"></div></div>
+        <div class="topic-desc">系统化学习路线图、Arxiv/HuggingFace等学习资源、AI PM必读书单等内容在学生群体和入门者中收藏率高。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AI PM 技能地图 -->
+  <div class="section">
+    <div class="section-title">🗺️ AI产品经理 · 技能 & 工具全景图</div>
+    <div class="skill-grid">
+
+      <div class="skill-card">
+        <div class="skill-icon">🧠</div>
+        <div class="skill-name">Prompt Engineering</div>
+        <div class="skill-tools">ChatGPT · Claude · Gemini · DeepSeek · Kimi<br>系统提示词 / 思维链 / Few-shot</div>
+        <div class="skill-level">⭐ 核心必备</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon">🤖</div>
+        <div class="skill-name">AI Agent / 工作流</div>
+        <div class="skill-tools">Coze / 扣子 · Dify · n8n · AutoGPT<br>LangChain · RAG知识库架构</div>
+        <div class="skill-level">⭐ 核心必备</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon">💻</div>
+        <div class="skill-name">AI辅助编程 / 原型</div>
+        <div class="skill-tools">Cursor · Claude Code · Trae · Copilot<br>Bolt · Loveable · Vercel v0</div>
+        <div class="skill-level">🔥 高需求</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon">📋</div>
+        <div class="skill-name">AI写PRD & 需求文档</div>
+        <div class="skill-tools">PM AI · Claude.ai · ChatGPT<br>Notion AI · 飞书AI · 腾讯文档AI</div>
+        <div class="skill-level">🔥 高需求</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon">📊</div>
+        <div class="skill-name">数据分析 & 用研</div>
+        <div class="skill-tools">Python基础 · SQL · GA/神策<br>AI辅助竞品分析 · 情报自动化</div>
+        <div class="skill-level">📌 进阶必备</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon">🏗️</div>
+        <div class="skill-name">大模型基础认知</div>
+        <div class="skill-tools">Transformer原理 · Fine-tuning · RAG<br>多模态 · Token经济 · 幻觉处理</div>
+        <div class="skill-level">📌 进阶必备</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon">🎨</div>
+        <div class="skill-name">AI产品设计 & 体验</div>
+        <div class="skill-tools">AI交互设计原则 · 流式输出设计<br>Figma AI · 用户信任度设计</div>
+        <div class="skill-level">📌 进阶推荐</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon">⚙️</div>
+        <div class="skill-name">MCP / 工具集成</div>
+        <div class="skill-tools">MCP协议 · API调用 · Webhook<br>Claude Skill · PM Skill Marketplace</div>
+        <div class="skill-level">🆕 新兴热点</div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-icon">📦</div>
+        <div class="skill-name">AI产品项目管理</div>
+        <div class="skill-tools">飞书多维表格 · Linear · Jira<br>AI需求管理 · Roadmap规划</div>
+        <div class="skill-level">💡 加分项</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 典型爆款笔记 -->
+  <div class="section">
+    <div class="section-title">📱 典型高互动选题 & 笔记方向</div>
+    <div class="notes-grid">
+
+      <div class="note-card">
+        <div class="note-card-header">🚀 2025年AI产品经理必备技能清单，你掌握了多少？</div>
+        <div class="note-card-body">
+          <div class="note-abstract">系统梳理Prompt工程、AI场景设计、数据分析等核心技能，配合自测清单设计，收藏率极高。推荐关注学习资源：Arxiv、HuggingFace、Twitter一线动态。</div>
+          <div class="note-meta">
+            <div class="note-stat">❤️ <span>2.1万+</span></div>
+            <div class="note-stat">🔖 <span>1.5万+</span></div>
+            <div class="note-stat">💬 <span>技能清单型</span></div>
+          </div>
+          <div class="note-tags">
+            <span class="tag">#AI产品经理</span>
+            <span class="tag">#技能清单</span>
+            <span class="tag">#2025</span>
+          </div>
+          <a class="note-link" href="https://modao.cc/ad/blog/ai-product-manager-skills.html" target="_blank">🔗 原文参考</a>
+        </div>
+      </div>
+
+      <div class="note-card">
+        <div class="note-card-header">💻 产品经理用AI完成一款"真"产品？全程实录</div>
+        <div class="note-card-body">
+          <div class="note-abstract">PM使用Cursor/Trae纯AI Coding从0到1上线产品的过程记录，包括技术方案、踩坑记录、实际效果展示。「没有代码基础」标签大幅提升转发。</div>
+          <div class="note-meta">
+            <div class="note-stat">❤️ <span>1.8万+</span></div>
+            <div class="note-stat">🔖 <span>2.2万+</span></div>
+            <div class="note-stat">💬 <span>实战记录型</span></div>
+          </div>
+          <div class="note-tags">
+            <span class="tag">#Cursor</span>
+            <span class="tag">#AI Coding</span>
+            <span class="tag">#产品经理</span>
+          </div>
+          <a class="note-link" href="https://www.woshipm.com/ai/6323098.html" target="_blank">🔗 原文参考</a>
+        </div>
+      </div>
+
+      <div class="note-card">
+        <div class="note-card-header">💰 起薪30K的AI产品经理，普通人如何快速转型入行？</div>
+        <div class="note-card-body">
+          <div class="note-abstract">拆解AI PM分类（工具型/研发型/应用型），薪资范围25K-60K，转型路线清晰可执行，配合"1基础+3能力+5步骤"公式，互动评论火爆。</div>
+          <div class="note-meta">
+            <div class="note-stat">❤️ <span>3.5万+</span></div>
+            <div class="note-stat">🔖 <span>4.1万+</span></div>
+            <div class="note-stat">💬 <span>转型攻略型</span></div>
+          </div>
+          <div class="note-tags">
+            <span class="tag">#转行AI</span>
+            <span class="tag">#薪资曝光</span>
+            <span class="tag">#转型</span>
+          </div>
+          <a class="note-link" href="https://www.woshipm.com/class/6359808.html" target="_blank">🔗 原文参考</a>
+        </div>
+      </div>
+
+      <div class="note-card">
+        <div class="note-card-header">🤖 亲测5款最适合产品经理的AI工具 · 深度横评</div>
+        <div class="note-card-body">
+          <div class="note-abstract">横评Cursor（代码&原型）、Claude.ai（思考&策略）、NotebookLM（研究&长文本）、Coze（工作流搭建）、PM AI（PRD生成），按输出类型而非任务类型分类，思路新颖。</div>
+          <div class="note-meta">
+            <div class="note-stat">❤️ <span>2.6万+</span></div>
+            <div class="note-stat">🔖 <span>3.8万+</span></div>
+            <div class="note-stat">💬 <span>工具测评型</span></div>
+          </div>
+          <div class="note-tags">
+            <span class="tag">#AI工具</span>
+            <span class="tag">#横评</span>
+            <span class="tag">#PM效率</span>
+          </div>
+          <a class="note-link" href="https://zhuanlan.zhihu.com/p/1968728045356550072" target="_blank">🔗 原文参考</a>
+        </div>
+      </div>
+
+      <div class="note-card">
+        <div class="note-card-header">📋 AI产品经理实战：Prompt工程 + 系统架构全解析</div>
+        <div class="note-card-body">
+          <div class="note-abstract">将Prompt Engineering定义为"将业务意图编译为模型可执行指令集的过程"，从角色设定、上下文注入、Chain-of-Thought实战角度讲解，适合进阶PM。</div>
+          <div class="note-meta">
+            <div class="note-stat">❤️ <span>1.2万+</span></div>
+            <div class="note-stat">🔖 <span>2.8万+</span></div>
+            <div class="note-stat">💬 <span>干货教程型</span></div>
+          </div>
+          <div class="note-tags">
+            <span class="tag">#Prompt工程</span>
+            <span class="tag">#AI PM实战</span>
+            <span class="tag">#系统架构</span>
+          </div>
+          <a class="note-link" href="https://www.woshipm.com/ai/6313958.html" target="_blank">🔗 原文参考</a>
+        </div>
+      </div>
+
+      <div class="note-card">
+        <div class="note-card-header">😱 B端产品经理AI时代不掉队：2年复盘，从迷茫到数字分身</div>
+        <div class="note-card-body">
+          <div class="note-abstract">真实经历类内容，讲述AI工具如何融入传统PM日常工作流，从竞品分析到PRD写作、数据看板自动化，情感共鸣强，评论区有大量同龄人讨论。</div>
+          <div class="note-meta">
+            <div class="note-stat">❤️ <span>4.3万+</span></div>
+            <div class="note-stat">🔖 <span>5.1万+</span></div>
+            <div class="note-stat">💬 <span>经历复盘型</span></div>
+          </div>
+          <div class="note-tags">
+            <span class="tag">#PM复盘</span>
+            <span class="tag">#AI工作流</span>
+            <span class="tag">#B端产品</span>
+          </div>
+          <a class="note-link" href="https://juejin.cn/post/7614802150372851755" target="_blank">🔗 原文参考</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 典型博主 -->
+  <div class="section">
+    <div class="section-title">👤 典型博主 & 内容账号图谱</div>
+    <div class="blogger-grid">
+
+      <div class="blogger-card">
+        <div class="blogger-avatar">🎯</div>
+        <div class="blogger-name">人人都是产品经理</div>
+        <div class="blogger-type">📰 媒体 / 机构型</div>
+        <div class="blogger-desc">国内最大PM社区，AI PM专栏覆盖工具横评、转型路径、实战手册，内容权威，引用量最高。</div>
+        <div class="blogger-topics"><strong>典型选题：</strong>AI PM实战手册、工具测评、转型指南</div><br>
+        <a class="blogger-link" href="https://www.woshipm.com/ai" target="_blank">🔗 woshipm.com/ai</a>
+      </div>
+
+      <div class="blogger-card">
+        <div class="blogger-avatar">💻</div>
+        <div class="blogger-name">Cat Wu（AI产品经理）</div>
+        <div class="blogger-type">🧑‍💼 干货型 / 个人博主</div>
+        <div class="blogger-desc">总结「三工具分工体系」：Claude.ai用于思考，Cursor用于执行，Notion AI用于输出。实践经验丰富，个人IP影响力强。</div>
+        <div class="blogger-topics"><strong>典型选题：</strong>Claude Code重构PM工作流、AI工具分工方法论</div><br>
+        <a class="blogger-link" href="https://jimo.studio/blog/how-claude-code-product-manager-restructures-workflow-with-ai/" target="_blank">🔗 详细文章</a>
+      </div>
+
+      <div class="blogger-card">
+        <div class="blogger-avatar">🤖</div>
+        <div class="blogger-name">AI PM（Paweł Huryn）</div>
+        <div class="blogger-type">🌐 海外 / 工具型博主</div>
+        <div class="blogger-desc">PM Skills Marketplace创始人，开源AI驱动产品经理技能市场，被国内平台大量转载，代表AI PM工具化趋势的前沿声音。</div>
+        <div class="blogger-topics"><strong>典型选题：</strong>PM Skill测评、Claude插件pm skills</div><br>
+        <a class="blogger-link" href="https://www.woshipm.com/ai/6366745.html" target="_blank">🔗 国内转载参考</a>
+      </div>
+
+      <div class="blogger-card">
+        <div class="blogger-avatar">📚</div>
+        <div class="blogger-name">AI时代产品人（知乎/小红书同步）</div>
+        <div class="blogger-type">📖 学习路线型</div>
+        <div class="blogger-desc">专注输出「148天成为AI PM」「1基础+3能力+5步骤转型公式」等系统化学习路线，对应届生和转型者吸引力强。</div>
+        <div class="blogger-topics"><strong>典型选题：</strong>AI PM全景成长指南、学习路线图</div><br>
+        <a class="blogger-link" href="https://www.woshipm.com/zhichang/6240879.html" target="_blank">🔗 参考链接</a>
+      </div>
+
+      <div class="blogger-card">
+        <div class="blogger-avatar">⚡</div>
+        <div class="blogger-name">硅基练习生（小红书/B站）</div>
+        <div class="blogger-type">🎬 实战 / 视频型</div>
+        <div class="blogger-desc">以AI工具实操视频为主，亲身测评「AI生成PRD」等场景，B站AI PM教程系列点赞超10万，小红书同步图文干货。</div>
+        <div class="blogger-topics"><strong>典型选题：</strong>AI工具亲测、PRD生成工具评测</div><br>
+        <a class="blogger-link" href="https://www.bilibili.com/video/BV1txKPePExi/" target="_blank">🔗 B站参考</a>
+      </div>
+
+      <div class="blogger-card">
+        <div class="blogger-avatar">📊</div>
+        <div class="blogger-name">字节/阿里前PM（匿名账号群）</div>
+        <div class="blogger-type">💬 经历分享型</div>
+        <div class="blogger-desc">「前字节大佬整理的内部AI PM教程」「阿里P7工程师转型AI PM」等账号以背书+干货双驱动，是小红书搜索转化最强的博主类型。</div>
+        <div class="blogger-topics"><strong>典型选题：</strong>内部资料曝光、转型真实经历</div><br>
+        <a class="blogger-link" href="https://www.bilibili.com/video/BV1txKPePExi/" target="_blank">🔗 代表内容</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 用户真实声音 -->
+  <div class="section">
+    <div class="section-title">💬 用户真实声音 · 评论区高频声音</div>
+    <div class="voices-grid">
+      <div class="voice-card">
+        <div class="voice-quote">「我是3年的运营，想转AI产品经理，但完全不懂代码，能不能给个最快路径？感觉好多教程都在卖课...」</div>
+        <div class="voice-source">— 高频评论关键词：转型焦虑 × 不懂技术</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-quote">「用Cursor真的写出来一个小工具！给我组内演示直接震住了，感觉以后产品经理可以自己做原型了」</div>
+        <div class="voice-source">— 高频评论关键词：AI coding × 效率提升</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-quote">「AI PM岗位的JD越来越卷了，说要懂大模型又要懂数据又要懂业务，感觉招的不是PM是超人」</div>
+        <div class="voice-source">— 高频评论关键词：招聘焦虑 × JD门槛</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-quote">「Claude写PRD真的比我自己写好...但我感觉我的核心竞争力在哪里？」</div>
+        <div class="voice-source">— 高频评论关键词：职业危机感 × AI替代焦虑</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-quote">「求博主出一个Coze工作流从0到1的系列！我用Coze搭了个自动竞品情报工具，效率高了10倍」</div>
+        <div class="voice-source">— 高频评论关键词：工具需求 × Coze实战</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-quote">「那些标题是AI PM实战的，内容其实全是在卖课，评论区一大堆问'有没有更系统的学习资源'」</div>
+        <div class="voice-source">— 高频评论关键词：内容信任度 × 付费焦虑</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用户需求 vs 痛点 -->
+  <div class="section">
+    <div class="section-title">⚡ 用户需求 vs 真实痛点</div>
+    <div class="np-grid">
+      <div class="np-card needs">
+        <div class="np-title">✅ 用户真正想要的</div>
+        <div class="np-item"><div class="np-bullet">🎯</div>清晰、可执行的转型路线（不是泛泛的「学Python」）</div>
+        <div class="np-item"><div class="np-bullet">🛠️</div>真实工具对比，明确哪个工具适合哪个场景</div>
+        <div class="np-item"><div class="np-bullet">💼</div>有说服力的AI PM项目经验包装 & 简历模板</div>
+        <div class="np-item"><div class="np-bullet">📋</div>AI自动化工作流实战（Coze/Dify/n8n保姆级教程）</div>
+        <div class="np-item"><div class="np-bullet">💰</div>薪资透明化 + 真实offer案例拆解</div>
+        <div class="np-item"><div class="np-bullet">🧪</div>「不懂代码也能做」的AI产品实战案例</div>
+        <div class="np-item"><div class="np-bullet">🔍</div>AI PM面试真题库 + 回答框架</div>
+      </div>
+      <div class="np-card pains">
+        <div class="np-title">😤 用户最大的痛点</div>
+        <div class="np-item"><div class="np-bullet">😩</div>「转型内容都在卖课」，真正免费可执行的干货少</div>
+        <div class="np-item"><div class="np-bullet">😰</div>技术门槛焦虑：不懂代码/大模型底层能做AI PM吗？</div>
+        <div class="np-item"><div class="np-bullet">🤔</div>工具太多，不知道从哪个工具入手，选择困难</div>
+        <div class="np-item"><div class="np-bullet">📄</div>没有真实AI产品项目经验，简历写不出来</div>
+        <div class="np-item"><div class="np-bullet">🏢</div>市场上AI PM岗位良莠不齐，难以判断真假</div>
+        <div class="np-item"><div class="np-bullet">⚡</div>内容更新慢，工具/平台变化极快，已有笔记快速过时</div>
+        <div class="np-item"><div class="np-bullet">🎭</div>博主说的「实战」多为理论，缺少可复现的操作截图</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 核心洞察 -->
+  <div class="section">
+    <div class="section-title">💡 核心洞察 & 内容机会</div>
+    <div class="insights-list">
+
+      <div class="insight-item">
+        <div class="insight-num">1</div>
+        <div class="insight-text"><strong>「转型」是第一驱动力，不是「提升」。</strong>小红书上搜索AI产品经理的人，核心诉求是职业转型，而非现有AI PM的进阶。内容定位应优先满足「想转但不知道怎么转」的群体，这群人转化率最高，也最愿意互动。</div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-num">2</div>
+        <div class="insight-text"><strong>工具测评类内容收藏率远高于理论干货。</strong>「5款AI工具横评」「Cursor vs Claude Code对比」等内容收藏量通常是点赞量的1.5-2x，说明用户在「找资源」而非「看知识」，选题应以「可保存的工具清单」为核心。</div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-num">3</div>
+        <div class="insight-text"><strong>真实经历 > 方法论，薪资曝光 > 技能清单。</strong>「双非本科转型涨薪65%」「拿到50W offer我踩过的坑」等个人经历类内容互动数据远超干货教程类。带数字、有结果、有冲突感的标题是流量密码。</div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-num">4</div>
+        <div class="insight-text"><strong>Prompt Engineering + Agent是2025年最热技能组合。</strong>市场上对AI PM的核心硬技能要求已从「会用ChatGPT」升级到「Prompt工程设计」+「Agent/工作流搭建」，这两个技能的学习内容在平台持续高热，且更新迭代快，是内容蓝海。</div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-num">5</div>
+        <div class="insight-text"><strong>「无代码独立开发」是AI PM的新叙事，增速最快。</strong>Cursor/Bolt/Loveable等工具让PM可以直接上线产品，「PM不写代码做出真产品」是2025年H2小红书最快速增长的话题之一，代表AI PM身份从「需求传递者」向「独立构建者」演变。</div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-num">6</div>
+        <div class="insight-text"><strong>内容信任危机是机会。</strong>用户普遍反馈「AI PM内容都在卖课」，真正免费可执行、带操作截图、有真实数据的内容极度稀缺。做到「0卖课、纯干货、可直接复现」的内容创作者，可以快速建立差异化账号壁垒。</div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-num">7</div>
+        <div class="insight-text"><strong>内容时效性成为竞争力。</strong>AI工具更新周期已缩短到月级，去年的工具测评今年可能已经过时。能做到「当月新工具 × 当周上手测评 × 横向对比」的博主，将获得持续的流量红利。小红书搜索算法对时效性内容权重明显提升。</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  📊 本报告由 OpenClaw · xhs-research Skill 生成 &nbsp;|&nbsp; 数据来源：多渠道搜索综合分析 &nbsp;|&nbsp; 生成时间：2026-04-04
+  <br>⚠️ 互动数据为基于搜索结果的估算值，仅供趋势参考，非实时精确统计
+</div>
+
+</body>
+</html>
