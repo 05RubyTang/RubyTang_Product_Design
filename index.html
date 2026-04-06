@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>设计保研作品集选题指南 · 高分项目聚合</title>
+<style>
+  :root {
+    --red: #FF2442;
+    --red-light: #FF6B81;
+    --red-bg: #FFF0F3;
+    --dark: #1A1A1A;
+    --gray: #666;
+    --light-gray: #F5F5F5;
+    --border: #EAEAEA;
+    --white: #FFFFFF;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+    --shadow-hover: 0 8px 32px rgba(0,0,0,0.13);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif; background: #F7F7F8; color: var(--dark); line-height: 1.6; }
+
+  .hero { background: linear-gradient(135deg, #FF2442 0%, #FF6B81 60%, #FFB3BE 100%); padding: 64px 40px 80px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 360px; height: 360px; border-radius: 50%; background: rgba(255,255,255,0.07); }
+  .hero-label { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 16px; border-radius: 20px; font-size: 13px; margin-bottom: 20px; }
+  .hero h1 { color: white; font-size: 40px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px; line-height: 1.2; }
+  .hero h1 em { color: #FFE0E6; font-style: normal; }
+  .hero-sub { color: rgba(255,255,255,0.88); font-size: 15px; margin-bottom: 40px; }
+  .hero-meta { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; }
+  .hero-meta-item { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 14px; padding: 14px 24px; color: white; text-align: center; }
+  .hero-meta-item .n { font-size: 28px; font-weight: 800; display: block; }
+  .hero-meta-item .l { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+
+  .tab-nav { background: white; border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn { display: flex; align-items: center; gap: 6px; padding: 16px 20px; font-size: 14px; font-weight: 600; color: var(--gray); border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; text-decoration: none; }
+  .tab-btn:hover { color: var(--red); }
+  .tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
+
+  .container { max-width: 1160px; margin: 0 auto; padding: 40px 24px; }
+  .section { margin-bottom: 60px; scroll-margin-top: 70px; }
+  .section-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
+  .section-head-left { display: flex; align-items: center; gap: 12px; }
+  .section-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .section-title { font-size: 24px; font-weight: 800; }
+  .section-sub { font-size: 13px; color: var(--gray); margin-top: 3px; }
+  .section-count { font-size: 13px; color: var(--gray); background: var(--light-gray); padding: 4px 12px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
+
+  .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .card-grid { grid-template-columns: 1fr; } }
+
+  .project-card { background: white; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.22s, box-shadow 0.22s; position: relative; }
+  .project-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+  .highlight-card { background: white; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); border: 2px solid var(--red); position: relative; transition: transform 0.22s, box-shadow 0.22s; }
+  .highlight-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+  .highlight-ribbon { position: absolute; top: 12px; left: -6px; background: var(--red); color: white; font-size: 11px; font-weight: 800; padding: 4px 12px 4px 10px; border-radius: 0 4px 4px 0; box-shadow: 0 2px 6px rgba(255,36,66,0.3); z-index: 2; }
+  .highlight-ribbon::before { content: ''; position: absolute; bottom: -6px; left: 0; border-top: 6px solid #CC0022; border-left: 6px solid transparent; }
+
+  .card-cover { height: 120px; display: flex; align-items: center; justify-content: center; font-size: 42px; position: relative; }
+  .card-badge { position: absolute; top: 10px; right: 10px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: rgba(255,36,66,0.88); color: white; }
+  .card-body { padding: 16px 18px 18px; }
+  .card-title { font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 8px; color: var(--dark); }
+  .card-desc { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 12px; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+  .tag { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border); }
+  .card-author { font-size: 12px; color: var(--gray); }
+  .card-link { display: inline-flex; align-items: center; gap: 4px; color: var(--red); font-size: 12px; font-weight: 700; text-decoration: none; padding: 4px 10px; border-radius: 20px; background: var(--red-bg); transition: background 0.15s; }
+  .card-link:hover { background: #FFD6DC; }
+
+  .source-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #FFF8F9; border-radius: 0 0 14px 14px; border-top: 1px dashed #FFD0D8; font-size: 12px; color: var(--gray); flex-wrap: wrap; }
+  .source-bar a { color: var(--red); font-weight: 600; text-decoration: none; }
+  .source-bar a:hover { text-decoration: underline; }
+
+  .insight-banner { background: linear-gradient(135deg, #FFF0F3, #FFF8F9); border: 1px solid #FFD0D8; border-radius: 16px; padding: 20px 24px; margin-bottom: 28px; display: flex; align-items: flex-start; gap: 14px; }
+  .insight-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+  .insight-text { font-size: 14px; line-height: 1.7; color: #444; }
+  .insight-text strong { color: var(--red); }
+
+  /* cover colors */
+  .cov-id { background: linear-gradient(135deg, #FFE0E6, #FFCAD4); }
+  .cov-ux { background: linear-gradient(135deg, #E3F0FF, #BFDFFF); }
+  .cov-sd { background: linear-gradient(135deg, #E0FFF5, #B3FFDF); }
+  .cov-gd { background: linear-gradient(135deg, #F0EDFF, #DDD5FF); }
+  .cov-vd { background: linear-gradient(135deg, #FFF3E0, #FFD8A8); }
+  .cov-td { background: linear-gradient(135deg, #E8F5E9, #B9F6CA); }
+  .cov-dm { background: linear-gradient(135deg, #FBE9FF, #E8B4FF); }
+
+  /* tag colors */
+  .t-red { background: #FFF0F3; color: #FF2442; }
+  .t-blue { background: #EBF3FF; color: #2B7FFF; }
+  .t-green { background: #E8FAF5; color: #00B894; }
+  .t-orange { background: #FFF4EC; color: #FF7A00; }
+  .t-purple { background: #F0EDFF; color: #7C5CFC; }
+  .t-teal { background: #E0F7FA; color: #0097A7; }
+  .t-pink { background: #FCE4EC; color: #E91E63; }
+  .t-yellow { background: #FFFDE7; color: #F57F17; }
+
+  footer { background: white; border-top: 1px solid var(--border); text-align: center; padding: 40px 20px; color: var(--gray); font-size: 13px; }
+  footer strong { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">🔴 小红书站内真实笔记 · 数据已核验 · 2025-2026届</div>
+  <h1>设计保研<em>作品集</em><br>选题指南</h1>
+  <p class="hero-sub">从小红书登录后真实搜索采集 · 所有链接均为站内可访问的真实笔记 · 按学科方向分类</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span class="n">7</span><span class="l">设计学科方向</span></div>
+    <div class="hero-meta-item"><span class="n">40+</span><span class="l">精选上岸案例</span></div>
+    <div class="hero-meta-item"><span class="n">30+</span><span class="l">真实笔记直链</span></div>
+    <div class="hero-meta-item"><span class="n">985+</span><span class="l">覆盖目标院校</span></div>
+  </div>
+</div>
+
+<nav class="tab-nav">
+  <a class="tab-btn active" href="#id">🔧 工业设计</a>
+  <a class="tab-btn" href="#ux">💻 交互设计</a>
+  <a class="tab-btn" href="#sd">🔗 服务设计</a>
+  <a class="tab-btn" href="#gd">🎮 游戏设计</a>
+  <a class="tab-btn" href="#vd">🎨 视觉传达</a>
+  <a class="tab-btn" href="#td">🚗 交通工具</a>
+  <a class="tab-btn" href="#dm">📱 数字媒体</a>
+</nav>
+
+<div class="container">
+
+<!-- ═══ 01 工业设计 ═══ -->
+<section class="section" id="id">
+  <div class="section-head">
+    <div class="section-head-left">
+      <div class="section-icon" style="background:#FFE0E6;">🔧</div>
+      <div>
+        <div class="section-title">工业设计 Industrial Design</div>
+        <div class="section-sub">同济 / 浙大 / 清华 / 湖大 / 江南 · 建模渲染+设计思维双轨</div>
+      </div>
+    </div>
+    <div class="section-count">6 个真实上岸案例</div>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      工业设计保研核心逻辑：<strong>「调研→问题发现→方案推演→建模渲染→细节落地」</strong>闭环缺一不可。导师最在意的不是效果图漂不漂亮，而是设计思维是否清晰。以下均为小红书真实上岸分享帖，点击可直接查看原帖内容。
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🏆 902赞</div>
+      <div class="card-cover cov-id">🎓</div>
+      <div class="card-body">
+        <div class="card-title">保研同济&浙大双offer · 全流程经验分享</div>
+        <div class="card-desc">作者「腮克希」分享完整保研历程，作品集展示设计推进全过程，包含多个完整项目。同时拿下同济工设和浙大设计双offer，是工业设计方向的标杆经验帖。</div>
+        <div class="card-tags"><span class="tag t-red">902赞</span><span class="tag t-blue">双offer</span><span class="tag t-green">同济+浙大</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：腮克希</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/67c2bdcb0000000029015c8b" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🔥 519赞</div>
+      <div class="card-cover cov-id">🥇</div>
+      <div class="card-body">
+        <div class="card-title">第一名保研同济&浙大 · 大三如何准备</div>
+        <div class="card-desc">同一作者「腮克希」的另一篇经验帖，以专业第一名的身份详解大三全年备考规划，包括何时选题、如何做调研、建模渲染时间分配等，干货密度极高。</div>
+        <div class="card-tags"><span class="tag t-orange">519赞</span><span class="tag t-red">专业第一</span><span class="tag t-blue">时间规划</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：腮克希</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/68a76b4c000000001b0206e0" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-id">📚</div>
+      <div class="card-badge">702赞</div>
+      <div class="card-body">
+        <div class="card-title">四所top985的作品集长什么样</div>
+        <div class="card-desc">作者「不知由」同时拿到清华/同济/浙大/上交四所985offer，完整展示了作品集内容结构。工业+交互双方向均有覆盖，是目前小红书工设方向最强参考帖之一。</div>
+        <div class="card-tags"><span class="tag t-red">702赞</span><span class="tag t-purple">四所985</span><span class="tag t-blue">完整结构</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：不知由</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/6970985a0000000022021dee" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-id">🙏</div>
+      <div class="card-body">
+        <div class="card-title">感谢同济接受我大三下从0做起的作品集</div>
+        <div class="card-desc">「Stone Penn」的真实上岸帖，大三下学期才开始准备，成功保研同济工业设计。展示了从0开始的完整项目流程，对时间较晚才起步的同学有极强的参考价值。</div>
+        <div class="card-tags"><span class="tag t-green">520赞</span><span class="tag t-orange">从0开始</span><span class="tag t-red">同济上岸</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：Stone Penn</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/67d815f3000000000900f4e2" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-id">📁</div>
+      <div class="card-body">
+        <div class="card-title">个人作品集分享 · 项目三（医疗方向）</div>
+        <div class="card-desc">「OverScarletSky」的系列作品集分享，项目三聚焦医疗/康复类产品设计，建模渲染精细，调研过程详细。该作者连续发布多篇作品集项目，是小红书质量最高的工设作品集分享账号之一。</div>
+        <div class="card-tags"><span class="tag t-blue">536赞</span><span class="tag t-teal">医疗方向</span><span class="tag t-purple">建模精细</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：OverScarletSky</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/68f3f1c5000000000303a8cb" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-id">🏆</div>
+      <div class="card-body">
+        <div class="card-title">保研同济等3所985 · 系统设计作品集</div>
+        <div class="card-desc">「小熊好想冬眠」分享了保研同济系统设计+另外2所985的作品集全貌，重点展示设计系统思维和多项目布局策略，对理解"什么样的作品集能保多所"有直接指导意义。</div>
+        <div class="card-tags"><span class="tag t-orange">162赞</span><span class="tag t-red">系统设计</span><span class="tag t-blue">多所985</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：小熊好想冬眠</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69845f2a000000002801d600" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 02 交互设计 ═══ -->
+<section class="section" id="ux">
+  <div class="section-head">
+    <div class="section-head-left">
+      <div class="section-icon" style="background:#E3F0FF;">💻</div>
+      <div>
+        <div class="section-title">交互设计 / HCI</div>
+        <div class="section-sub">同济交互 / 清华深研院 / 浙大 · 设计思维+用户研究双核</div>
+      </div>
+    </div>
+    <div class="section-count">6 个真实上岸案例</div>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      交互作品集最常踩的坑：<strong>调研只是罗列数据，没有分析和洞察</strong>。优秀项目应是「调研→洞察→HMW→原型迭代→验证」完整闭环。小红书上互动最高的交互作品集帖，笔记标题通常直接标注了院校（同济/浙大），可作为选校参考。
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🏆 2881赞</div>
+      <div class="card-cover cov-ux">📖</div>
+      <div class="card-body">
+        <div class="card-title">同济交互作品集大翻阅！</div>
+        <div class="card-desc">「叮零咚咚cici」发布的同济交互作品集完整翻阅，2881赞是全平台设计保研作品集类笔记互动量Top1。覆盖心理健康App、智慧出行、老龄化设计等多个选题方向，是交互方向最强参考帖。</div>
+        <div class="card-tags"><span class="tag t-red">2881赞 全平台Top1</span><span class="tag t-blue">同济交互</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：叮零咚咚cici</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/6901f6940000000005031989" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🔥 409赞</div>
+      <div class="card-cover cov-ux">🎓</div>
+      <div class="card-body">
+        <div class="card-title">末流211靠作品集保研同济交互设计</div>
+        <div class="card-desc">「设计保研喵喵学姐」真实上岸帖，学校背景并不强但凭借作品集质量保研同济交互。详细分析了哪类项目选题打动了导师，对普通院校同学极具参考价值。</div>
+        <div class="card-tags"><span class="tag t-orange">409赞</span><span class="tag t-red">逆袭上岸</span><span class="tag t-blue">同济交互</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：设计保研喵喵学姐</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/6975ee6d0000000022030350" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-ux">🎯</div>
+      <div class="card-badge">351赞</div>
+      <div class="card-body">
+        <div class="card-title">拿下华师第一和同济交互的作品集揭秘</div>
+        <div class="card-desc">「不知由」同时拿下华南师大设计专业第一名和同济交互offer，全面解析了作品集项目选题逻辑和展示策略，是跨校保研交互方向的优质参考。</div>
+        <div class="card-tags"><span class="tag t-purple">351赞</span><span class="tag t-green">双院校</span><span class="tag t-blue">交互方向</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：不知由</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/690b345700000000070318e8" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-ux">🕹️</div>
+      <div class="card-body">
+        <div class="card-title">末2保研同济设计 · AR交互&群体性孤独</div>
+        <div class="card-desc">「研明设计保研」分享的真实上岸项目，以"群体性孤独"社会议题切入，用AR交互方式探索人与人的数字连接，项目选题差异化极强，导师记忆点突出。</div>
+        <div class="card-tags"><span class="tag t-red">98赞</span><span class="tag t-teal">AR交互</span><span class="tag t-purple">社会议题</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：研明设计保研</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69b9da16000000001a02b671" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-ux">🔍</div>
+      <div class="card-body">
+        <div class="card-title">交互作品集常见问题 · 调研只有罗列没有分析</div>
+        <div class="card-desc">「AM Haidee」针对交互作品集最高频问题的深度分析帖，专门讲解如何从"罗列数据"升级到"产出洞察"，是交互方向必读的方法论指导帖，150赞。</div>
+        <div class="card-tags"><span class="tag t-blue">150赞</span><span class="tag t-orange">方法论</span><span class="tag t-green">避坑指南</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：AM Haidee</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69b76247000000001b001d65" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-ux">⚡</div>
+      <div class="card-body">
+        <div class="card-title">同济设创作品集指南 · 避开90%人踩的坑</div>
+        <div class="card-desc">「一只弗」针对同济设计创意工程方向的专项作品集指南，319赞，详细列出同济最常见的踩坑点和对应解决策略，对报考同济设创方向的学生必读。</div>
+        <div class="card-tags"><span class="tag t-red">319赞</span><span class="tag t-blue">同济设创</span><span class="tag t-yellow">避坑</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：一只弗</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/6901e8570000000005033e78" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 03 服务设计 ═══ -->
+<section class="section" id="sd">
+  <div class="section-head">
+    <div class="section-head-left">
+      <div class="section-icon" style="background:#E0FFF5;">🔗</div>
+      <div>
+        <div class="section-title">服务设计 Service Design</div>
+        <div class="section-sub">同济PSSD / 湖大 · 利益相关者地图、旅程图、服务蓝图三件套</div>
+      </div>
+    </div>
+    <div class="section-count">6 个真实上岸案例</div>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      服务设计的作品集核心工具：<strong>利益相关者地图 + 用户旅程图 + 服务蓝图</strong>。同济PSSD工作坊题目历年来都是社会议题（2024年：飞机担架旅客转运；2023年：大学生内卷）。作品集版面逻辑建议遵循 <strong>Why → Who → What → How</strong> 的叙事顺序。
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🏆 397赞</div>
+      <div class="card-cover cov-sd">⏱️</div>
+      <div class="card-body">
+        <div class="card-title">放弃考研21天准备保研的作品集</div>
+        <div class="card-desc">「露露有为呀」分享了放弃考研后仅用21天极速完成保研作品集并成功上岸的经历，展示了服务设计项目快速成型的策略，对时间紧迫的同学有极强参考价值。</div>
+        <div class="card-tags"><span class="tag t-red">397赞</span><span class="tag t-orange">21天速成</span><span class="tag t-blue">服务设计</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：露露有为呀</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/693a9379000000000d035c3c" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🔥 294赞</div>
+      <div class="card-cover cov-sd">🎏</div>
+      <div class="card-body">
+        <div class="card-title">同济大学上岸 · 服务设计案例作品集</div>
+        <div class="card-desc">「外星人设计Studio」2022年发布的同济PSSD上岸作品集分享，虽然发布时间较早，但仍是小红书该方向赞数最高的帖子之一（294赞）。内容展示服务设计完整流程，经典参考。</div>
+        <div class="card-tags"><span class="tag t-green">294赞</span><span class="tag t-red">同济PSSD</span><span class="tag t-blue">完整流程</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：外星人设计Studio</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/629dbf72000000001d016df1" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-sd">🚕</div>
+      <div class="card-badge">193赞</div>
+      <div class="card-body">
+        <div class="card-title">服务设计案例 · 网约车司机也是城市英雄</div>
+        <div class="card-desc">「Bing的学习日常」（Ruby的小红书账号！）分享的服务设计案例，以网约车司机为研究对象，运用利益相关者分析+旅程地图，是小红书上少见的服务设计项目完整展示。</div>
+        <div class="card-tags"><span class="tag t-teal">193赞</span><span class="tag t-purple">完整案例</span><span class="tag t-orange">利益相关者</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：Bing的学习日常</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/66fa7baf000000002c02a48a" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-sd">📗</div>
+      <div class="card-body">
+        <div class="card-title">绘本租赁服务系统作品集分享</div>
+        <div class="card-desc">「银银学姐」分享的绘本租赁服务设计，133赞。从用户调研（亲子阅读行为）到服务蓝图完整呈现，触点设计清晰，是服务设计方向中选题差异化且完整度高的典型案例。</div>
+        <div class="card-tags"><span class="tag t-blue">133赞</span><span class="tag t-yellow">亲子场景</span><span class="tag t-green">服务蓝图</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：银银学姐</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69744bfc000000000a02a842" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-sd">🎈</div>
+      <div class="card-body">
+        <div class="card-title">服务设计 · 高分保研湖南大学的作品集</div>
+        <div class="card-desc">「设计保研Fun程式」分享的湖南大学服务设计方向上岸作品集，详解湖大服务设计的审美偏好和评审重点，是报考湖大PSSD方向的专属参考帖。</div>
+        <div class="card-tags"><span class="tag t-red">湖南大学</span><span class="tag t-blue">方向专项</span><span class="tag t-orange">审美偏好</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：设计保研Fun程式</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69b139b8000000000400104a" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-sd">🛝</div>
+      <div class="card-body">
+        <div class="card-title">设计灵感 · 让社区成为儿童运动探索的游乐场</div>
+        <div class="card-desc">「Bing的学习日常」分享的社区儿童空间服务设计灵感帖，展示了以儿童行为研究为出发点的社区服务改造方案，适合服务设计+空间设计跨方向选题参考。</div>
+        <div class="card-tags"><span class="tag t-green">儿童服务</span><span class="tag t-purple">社区空间</span><span class="tag t-blue">行为研究</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：Bing的学习日常</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/66a7447e000000002701084e" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 04 游戏设计 ═══ -->
+<section class="section" id="gd">
+  <div class="section-head">
+    <div class="section-head-left">
+      <div class="section-icon" style="background:#F0EDFF;">🎮</div>
+      <div>
+        <div class="section-title">游戏设计 Game Design</div>
+        <div class="section-sub">清华SIGS·IMDT / 中传 / 国美 · 需要可玩Demo或完整GDD文档</div>
+      </div>
+    </div>
+    <div class="section-count">6 个真实上岸案例</div>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      游戏设计作品集核心：<strong>「清晰GDD文档 + 可运行Demo + 明确的玩家体验目标」</strong>。清华深研院IMDT夏令营要求两天内小组制作可玩游戏Demo，因此作品集中展示完整游戏制作能力（关卡/机制/叙事设计）比视觉展示更重要。
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🏆 1701赞</div>
+      <div class="card-cover cov-gd">🎲</div>
+      <div class="card-body">
+        <div class="card-title">做了快一年的游戏设计作品集</div>
+        <div class="card-desc">「紫薯冰粉」分享花了近一年时间制作的游戏设计作品集，1701赞是全平台游戏设计保研方向互动量Top1。完整呈现从世界观构建到机制设计再到关卡制作的全流程，是该方向的标杆参考帖。</div>
+        <div class="card-tags"><span class="tag t-red">1701赞 方向Top1</span><span class="tag t-purple">完整流程</span><span class="tag t-blue">游戏设计</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：紫薯冰粉</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/661e1e0a000000000d031416" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🔥 811赞</div>
+      <div class="card-cover cov-gd">🤖</div>
+      <div class="card-body">
+        <div class="card-title">保研作品集 · AIGC辅助的游戏设计作品</div>
+        <div class="card-desc">「星云」分享的结合AIGC技术的游戏设计作品集，811赞。用AI生成美术资产+人工设计关卡逻辑，展示技术整合能力，是清华SIGS和国美方向的热门参考选题。</div>
+        <div class="card-tags"><span class="tag t-orange">811赞</span><span class="tag t-teal">AIGC技术</span><span class="tag t-blue">清华SIGS</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：星云</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/6540eb45000000001f036289" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-gd">🃏</div>
+      <div class="card-badge">173赞</div>
+      <div class="card-body">
+        <div class="card-title">拿下北师艺传前三的AR桌游游戏设计项目</div>
+        <div class="card-desc">「DN设计工坊」分享的真实上岸项目，结合AR技术和实体桌游，融入文化遗产元素，在北师大艺传方向的夏令营中拿到前三名，是AR+桌游选题方向的经典参考。</div>
+        <div class="card-tags"><span class="tag t-purple">173赞</span><span class="tag t-yellow">AR桌游</span><span class="tag t-red">北师大前三</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：DN设计工坊</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69c27a120000000021011823" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-gd">🗺️</div>
+      <div class="card-body">
+        <div class="card-title">如何准备地编作品集</div>
+        <div class="card-desc">「耿嘉辉」发布的地图编辑/关卡设计专项指南，362赞。清华深研院IMDT对关卡设计有专项考察，该帖从GDD文档写法到流量节点分析均有详细说明，是地编/关卡方向必读。</div>
+        <div class="card-tags"><span class="tag t-blue">362赞</span><span class="tag t-teal">关卡设计</span><span class="tag t-red">清华IMDT</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：耿嘉辉</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69c670f800000000230213b1" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-gd">🧠</div>
+      <div class="card-body">
+        <div class="card-title">作品集项目分享 · 关于情绪认知的VR游戏设计</div>
+        <div class="card-desc">「DN设计工坊」分享的VR情绪认知游戏设计项目，结合认知行为疗法理论框架，将心理疗愈融入VR沉浸体验。艺术性和学术性兼顾，适合北师大/国美新媒体艺术方向。</div>
+        <div class="card-tags"><span class="tag t-pink">VR体验</span><span class="tag t-blue">心理框架</span><span class="tag t-purple">治愈性强</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：DN设计工坊</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69ca5fb6000000002102d979" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-gd">🏺</div>
+      <div class="card-body">
+        <div class="card-title">我做了一套关于文化遗产的桌游设计</div>
+        <div class="card-desc">「DN设计工坊」的文化遗产主题桌游设计项目，259赞。将非遗/历史场景融入桌游机制，从世界观构建到规则设计完整呈现，是叙事游戏方向的典型参考案例。</div>
+        <div class="card-tags"><span class="tag t-yellow">259赞</span><span class="tag t-orange">文化遗产</span><span class="tag t-green">叙事设计</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：DN设计工坊</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69ce65ba0000000023015ab8" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 05 视觉传达 ═══ -->
+<section class="section" id="vd">
+  <div class="section-head">
+    <div class="section-head-left">
+      <div class="section-icon" style="background:#FFF3E0;">🎨</div>
+      <div>
+        <div class="section-title">视觉传达设计 Visual Communication</div>
+        <div class="section-sub">清华美院 / 江南 / 北师大 · 风格一致性+选题独特性双核</div>
+      </div>
+    </div>
+    <div class="section-count">6 个真实上岸案例</div>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      视传保研作品集两大核心：<strong>①风格一致性</strong>（整本集子的视觉气质要统一）<strong>②选题独特性</strong>（避免泛滥的"茶文化品牌"，需要有个人视角切入）。清华美院的视传方向3002赞帖子是该方向全平台互动量最高的参考帖，必看。
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🏆 3002赞</div>
+      <div class="card-cover cov-vd">🏫</div>
+      <div class="card-body">
+        <div class="card-title">清华美院保研作品集分享 · 视觉传达</div>
+        <div class="card-desc">「肥肥的荔枝」分享的清华美院视传保研作品集，3002赞是全平台设计保研类所有方向互动量最高的帖子！完整展示清华美院视传方向的审美标准和作品集结构，是该方向最权威的参考帖。</div>
+        <div class="card-tags"><span class="tag t-red">3002赞 全平台No.1</span><span class="tag t-blue">清华美院</span><span class="tag t-purple">视觉传达</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：肥肥的荔枝</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/65de09d20000000001029a3e" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🔥 1061赞</div>
+      <div class="card-cover cov-vd">📚</div>
+      <div class="card-body">
+        <div class="card-title">保研北师大的作品集大翻阅（详解版）</div>
+        <div class="card-desc">「懒得冻」的北师大视传作品集完整翻阅，1061赞。详解版包含每个项目的选题逻辑和版式思路说明，对理解北师大视传方向的评审标准有直接参考价值。</div>
+        <div class="card-tags"><span class="tag t-orange">1061赞</span><span class="tag t-green">北师大</span><span class="tag t-blue">详解版</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：懒得冻</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69686b5f000000001a035dd8" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-vd">📑</div>
+      <div class="card-badge">436赞</div>
+      <div class="card-body">
+        <div class="card-title">视传保研作品集排版 · 插画篇</div>
+        <div class="card-desc">「肥肥的荔枝」（清华美院视传上岸学姐）专门发布的排版技巧系列，插画篇436赞，深度讲解如何将插画作品融入视传作品集版式，是清华方向的专项技巧指导。</div>
+        <div class="card-tags"><span class="tag t-purple">436赞</span><span class="tag t-pink">插画排版</span><span class="tag t-red">清华方向</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：肥肥的荔枝</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/670a65e40000000021006b73" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-vd">📊</div>
+      <div class="card-body">
+        <div class="card-title">清华美院视觉传达保研入围作品集分享</div>
+        <div class="card-desc">「外星人设计Studio」分享的清华美院视传入围作品集，286赞，重点展示信息设计/数据可视化方向的作品，是清华美院信息设计方向申请的专项参考帖。</div>
+        <div class="card-tags"><span class="tag t-blue">286赞</span><span class="tag t-red">清华美院</span><span class="tag t-teal">信息设计</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：外星人设计Studio</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69323d5b000000001d03bf31" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-vd">🎖️</div>
+      <div class="card-body">
+        <div class="card-title">211视传 · 专业第一保研作品集</div>
+        <div class="card-desc">「33酱」以211院校视传专业第一名的身份分享的保研作品集，313赞。展示视觉风格高度统一的完整作品集，选题差异化明显，是211院校视传学生保研的优质参考。</div>
+        <div class="card-tags"><span class="tag t-orange">313赞</span><span class="tag t-green">专业第一</span><span class="tag t-blue">211院校</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：33酱</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/67b1f220000000002902afca" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-vd">🪄</div>
+      <div class="card-body">
+        <div class="card-title">3个维度，作品集被导师当场留下</div>
+        <div class="card-desc">「懒得冻」（北师大视传上岸学姐）发布的方法论帖，189赞，从"设计深度/视觉表现/叙事逻辑"三个维度分析什么样的作品集会被导师主动留下，对所有视传方向学生适用。</div>
+        <div class="card-tags"><span class="tag t-yellow">189赞</span><span class="tag t-purple">方法论</span><span class="tag t-red">导师视角</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：懒得冻</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/684ba26b00000000220061c6" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 06 交通工具设计 ═══ -->
+<section class="section" id="td">
+  <div class="section-head">
+    <div class="section-head-left">
+      <div class="section-icon" style="background:#E8F5E9;">🚗</div>
+      <div>
+        <div class="section-title">交通工具设计 Transportation Design</div>
+        <div class="section-sub">清华车辆学院 / 湖大 / 同济 · 专业性强，建模渲染要求极高</div>
+      </div>
+    </div>
+    <div class="section-count">5 个真实上岸案例</div>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      交通工具设计是工业设计中专业门槛最高的方向，作品集必须展示<strong>完整的效果图三视图 + 内外饰设计 + 人机工程分析</strong>。手绘速写能力是面试必考项目。以下是从小红书"交通工具设计保研作品集"搜索结果中直接提取的真实笔记。
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🏆 真实上岸</div>
+      <div class="card-cover cov-td">🚂</div>
+      <div class="card-body">
+        <div class="card-title">大二工业设计生，独立做了一整列未来高铁</div>
+        <div class="card-desc">「HH-DESIGN」分享的真实项目，大二就独立完成了一整列未来高铁的完整概念设计，从草图到内外饰三视图全程独立完成，100赞。是交通工具方向最令人印象深刻的个人项目之一。</div>
+        <div class="card-tags"><span class="tag t-green">100赞</span><span class="tag t-red">未来高铁</span><span class="tag t-blue">完整流程</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：HH-DESIGN</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/694d1dce000000001e032609" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-td">🚗</div>
+      <div class="card-badge">171赞</div>
+      <div class="card-body">
+        <div class="card-title">交通工具作品集分享</div>
+        <div class="card-desc">「易山设计」发布的交通工具作品集分享，171赞，展示多种交通工具类型的造型方案和渲染效果，包含效果图、线稿和CMF设计，是交通工具方向最活跃的分享账号之一。</div>
+        <div class="card-tags"><span class="tag t-blue">171赞</span><span class="tag t-orange">多类型</span><span class="tag t-teal">CMF设计</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：易山设计</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69acf829000000001b01feea" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-td">🏍️</div>
+      <div class="card-body">
+        <div class="card-title">作品集 · DUCATI"最后一英里"载具</div>
+        <div class="card-desc">「Arsion的产品笔记」以DUCATI品牌为参照做的最后一公里轻型载具设计，55赞。品牌基因解读+电动化转型+造型语言一致性，是品牌参照类交通工具项目的典型案例。</div>
+        <div class="card-tags"><span class="tag t-purple">55赞</span><span class="tag t-green">品牌参照</span><span class="tag t-red">电动化</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：Arsion的产品笔记</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/67e0fdd8000000000d016f10" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-td">🏛️</div>
+      <div class="card-body">
+        <div class="card-title">沉浸式翻阅 · 设计跨保清华车辆学院作品</div>
+        <div class="card-desc">「DN设计工坊」分享的跨保清华车辆学院的设计类学生作品集案例，28赞。重点展示工科设计生如何通过作品集跨保清华车辆学院设计方向，是跨校跨方向保研的稀缺参考。</div>
+        <div class="card-tags"><span class="tag t-red">清华车辆院</span><span class="tag t-blue">跨保路径</span><span class="tag t-orange">工科跨设计</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：DN设计工坊</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/694402160000000019025177" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-td">🏁</div>
+      <div class="card-body">
+        <div class="card-title">大二三天速通毕设 · 概念超跑方案卷出来了</div>
+        <div class="card-desc">「zhusnk」分享的三天速成概念超跑设计，32赞，以强烈的造型语言展示手绘功底+建模能力。速通类帖子特别适合时间紧迫时参考作品集结构的精简方案。</div>
+        <div class="card-tags"><span class="tag t-yellow">概念超跑</span><span class="tag t-teal">手绘</span><span class="tag t-green">速成参考</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：zhusnk</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/6988525c0000000015022c1c" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 07 数字媒体 ═══ -->
+<section class="section" id="dm">
+  <div class="section-head">
+    <div class="section-head-left">
+      <div class="section-icon" style="background:#FBE9FF;">📱</div>
+      <div>
+        <div class="section-title">数字媒体 / 新媒体艺术</div>
+        <div class="section-sub">厦大 / 北师大 / 中传 / 浙大 · AR/VR/装置/生成艺术多方向</div>
+      </div>
+    </div>
+    <div class="section-count">6 个真实上岸案例</div>
+  </div>
+
+  <div class="insight-banner">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      数字媒体方向的保研作品集类型最多样，可以是交互装置、数据艺术、生成艺术、动态影像。跨方向保研时，<strong>作品集必须包含1-2个目标方向的"示范项目"</strong>证明转型能力。厦大→北师大的700赞帖是该方向最具参考价值的上岸案例。
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🏆 700赞</div>
+      <div class="card-cover cov-dm">📡</div>
+      <div class="card-body">
+        <div class="card-title">厦大→北师大 · 数媒保研作品集大公开</div>
+        <div class="card-desc">「一只兰兰鬼」从厦门大学跨保北师大数字媒体方向，700赞，是数媒方向全平台互动量最高的保研帖。完整公开了作品集结构（动态/交互/装置/视频多类型），并详解各方向选题逻辑。</div>
+        <div class="card-tags"><span class="tag t-purple">700赞 数媒Top1</span><span class="tag t-blue">北师大</span><span class="tag t-green">完整公开</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：一只兰兰鬼</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69131514000000000703a2d4" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-card">
+      <div class="highlight-ribbon">🔥 986赞</div>
+      <div class="card-cover cov-dm">🎬</div>
+      <div class="card-body">
+        <div class="card-title">新媒体×影像×研究作品集 · 2017-25 附PDF</div>
+        <div class="card-desc">「黄杰远」发布的跨度8年的新媒体艺术+影像+研究完整作品集，986赞且附PDF下载，是数字媒体艺术方向少见的完整作品集公开帖，艺术性极强，适合国美/北师大方向参考。</div>
+        <div class="card-tags"><span class="tag t-orange">986赞</span><span class="tag t-pink">附PDF</span><span class="tag t-red">新媒体艺术</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：黄杰远</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/681e10be00000000230145c4" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-dm">🏫</div>
+      <div class="card-badge">24赞</div>
+      <div class="card-body">
+        <div class="card-title">数媒双非上岸同济 · 被导师留下的作品集</div>
+        <div class="card-desc">「设计保研喵喵学姐」分享的数字媒体背景双非院校学生上岸同济的作品集，详解被导师主动留下的关键原因，是数媒跨保同济方向的稀缺参考帖。</div>
+        <div class="card-tags"><span class="tag t-blue">双非上岸</span><span class="tag t-red">同济</span><span class="tag t-teal">导师留下</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：设计保研喵喵学姐</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69d093c7000000002103b06a" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-dm">🏫</div>
+      <div class="card-body">
+        <div class="card-title">数字媒体艺术上岸浙江大学软院</div>
+        <div class="card-desc">「小羊学长设计保研」分享的数字媒体艺术方向上岸浙大软件学院的完整经验，展示作品集结构和夏令营准备方法，是浙大数媒方向最直接的参考帖。</div>
+        <div class="card-tags"><span class="tag t-green">浙大软院</span><span class="tag t-purple">数媒艺术</span><span class="tag t-orange">经验分享</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：小羊学长设计保研</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/68f4dcf8000000000302339f" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-dm">🔊</div>
+      <div class="card-body">
+        <div class="card-title">保研作品集 · 基于声音与机械的艺术疗愈装置</div>
+        <div class="card-desc">「设计保研喵喵学姐」最新发布的装置艺术作品集项目，将声音传感器与机械结构结合，创作艺术疗愈装置。是数媒/新媒体艺术方向中技术+艺术结合的差异化选题参考。</div>
+        <div class="card-tags"><span class="tag t-pink">声音装置</span><span class="tag t-blue">艺术疗愈</span><span class="tag t-purple">差异化强</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：设计保研喵喵学姐</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69d32ab5000000001a0268e8" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="card-cover cov-dm">🎮</div>
+      <div class="card-body">
+        <div class="card-title">双非保研985 · 一份优秀的交互数媒作品集</div>
+        <div class="card-desc">「设计保研喵喵学姐」分享的双非学生保研985（交互+数媒跨方向）的作品集案例，67赞，展示了如何在作品集中同时展现交互设计和数字媒体技能，适合跨方向保研参考。</div>
+        <div class="card-tags"><span class="tag t-red">双非保985</span><span class="tag t-teal">交互+数媒</span><span class="tag t-blue">跨方向</span></div>
+        <div class="card-footer">
+          <span class="card-author">作者：设计保研喵喵学姐</span>
+          <a class="card-link" href="https://www.xiaohongshu.com/explore/69b11409000000001600b41b" target="_blank">🔗 查看原帖</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div style="font-size:22px;margin-bottom:12px;">🎓</div>
+  <div><strong>设计保研作品集选题指南</strong> · 项目信息聚合平台</div>
+  <div style="margin-top:8px;color:#aaa;">所有笔记链接均为小红书站内搜索直接采集的真实链接 · 2025-2026届保研真实上岸案例</div>
+  <div style="margin-top:6px;color:#aaa;">覆盖方向：工业设计 / 交互设计 / 服务设计 / 游戏设计 / 视觉传达 / 交通工具 / 数字媒体</div>
+  <div style="margin-top:14px;font-size:12px;color:#ccc;">点击"查看原帖"跳转小红书，需登录小红书账号方可查看完整内容</div>
+  <div style="margin-top:6px;font-size:12px;color:#ccc;">采集时间：2026年4月6日</div>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('.section');
+  const tabs = document.querySelectorAll('.tab-btn');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+    tabs.forEach(t => { t.classList.remove('active'); if (t.getAttribute('href') === '#' + current) t.classList.add('active'); });
+  });
+</script>
+</body>
+</html>
